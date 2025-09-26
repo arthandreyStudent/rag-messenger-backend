@@ -1,66 +1,91 @@
 [Company Profile]
-NexusTech was founded in 2015 by a group of engineers and business professionals who believed that cloud computing and artificial intelligence would transform the way organizations handle data. Over the years, NexusTech has grown from a small consulting practice into a regional IT solutions provider with a strong focus on cloud migration, cybersecurity, and data-driven analytics. The company’s mission has always been to make complex technologies accessible, reliable, and ethically sound.
 
-Our headquarters is located in Singapore, but we also operate satellite offices in Manila and Jakarta. These three locations serve as the backbone of our regional operations, allowing us to deliver projects for clients in finance, healthcare, and retail. With more than 500 employees spread across these offices, NexusTech has established itself as a trusted partner for digital transformation projects.
+    NexusTech was founded in 2015 by a group of engineers and business professionals who believed that cloud computing and artificial intelligence would transform the way organizations handle data. Over the years, NexusTech has grown from a small consulting practice into a regional IT solutions provider with a strong focus on cloud migration, cybersecurity, and data-driven analytics. The company’s mission has always been to make complex technologies accessible, reliable, and ethically sound.
+
+    From its Singapore headquarters, NexusTech has expanded operations to key markets in Manila and Jakarta, with growing client engagement in Cebu, Philippines. Cebu has been identified as a future growth hub due to its strong pool of IT talent, its role as a BPO capital, and its ecosystem of SMEs looking for digital transformation solutions. NexusTech continues to invest in regional hubs that combine global expertise with local market understanding.
+
+    Today, NexusTech employs more than 500 professionals across multiple disciplines—cloud architects, cybersecurity engineers, data scientists, software developers, and project managers—working together to deliver end-to-end IT solutions.
 
 [History and Milestones]
-2015 – NexusTech founded with a focus on small-scale cloud migrations.
-2016 – Signed partnership agreements with AWS and Microsoft Azure.
-2017 – Launched dedicated cybersecurity division offering penetration testing.
-2019 – Expanded to healthcare analytics projects across Southeast Asia.
-2020 – Opened Manila office to strengthen offshore support capabilities.
-2021 – Released first AI-driven analytics platform for retail customer insights.
-2023 – Launched “InsightAI,” a predictive analytics platform tailored for healthcare organizations.
-2024 – Recognized as one of the top 50 fastest-growing IT firms in Asia-Pacific.
 
-[Cloud Migration Services]
-Cloud migration is one of NexusTech’s core offerings. We help organizations transition from on-premises data centers to cloud infrastructures on AWS or Azure. The migration process is usually broken into several phases:
-1. Assessment – understanding current IT landscape, workloads, and security requirements.
-2. Planning – defining migration timelines, architecture redesign, and compliance needs.
-3. Execution – moving data, reconfiguring applications, and setting up cloud-native services.
-4. Optimization – ensuring scalability, cost management, and ongoing monitoring.
+    2015 – NexusTech founded with a focus on small-scale cloud migrations.
+    2016 – Signed partnership agreements with AWS and Microsoft Azure.
+    2017 – Launched dedicated cybersecurity division offering penetration testing.
+    2019 – Expanded to healthcare analytics projects across Southeast Asia.
+    2020 – Opened Manila office to strengthen offshore support capabilities.
+    2021 – Released first AI-driven analytics platform for retail customer insights.
+    2022 – Established Cebu R&D team focused on natural language processing (NLP) for multilingual markets.
+    2023 – Launched “InsightAI,” a predictive analytics platform tailored for healthcare organizations.
+    2024 – Recognized as one of the top 50 fastest-growing IT firms in Asia-Pacific.
 
-Typical migration projects take anywhere between three and six months depending on the size and complexity of the client’s systems.
+[Expanded Services Portfolio]
 
-[Cybersecurity Services]
-Our cybersecurity division offers solutions ranging from basic threat detection to advanced penetration testing. The philosophy is “security by design.” Every migration or analytics project includes layers of security practices such as encryption, role-based access control, and multifactor authentication. In addition, NexusTech conducts quarterly penetration tests for clients that require strict compliance, such as banks and healthcare providers.
+    Cloud Migration and Infrastructure Services
 
-Key tools and methods include:
-- End-to-end encryption for sensitive data.
-- Multi-factor authentication using both hardware tokens and software-based methods.
-- Continuous vulnerability scanning across networks and applications.
-- Security awareness training for employees to reduce risks from phishing attacks.
+    Beyond migrations, NexusTech also provides:
 
-[AI and Analytics Services]
-NexusTech believes in the responsible deployment of artificial intelligence. Our analytics platforms are designed to provide actionable insights without compromising on ethical standards. “InsightAI,” our healthcare analytics platform, was launched in 2023 and is now being used by hospitals in Singapore, Manila, and Jakarta. It uses machine learning models to predict patient admission rates, optimize resource allocation, and analyze disease spread trends.
+        - Hybrid cloud solutions integrating on-premise legacy systems with cloud services.
+        - Cloud-native application development to modernize outdated software.
+        - Disaster recovery planning and business continuity solutions.
+        - Managed services with 24/7 monitoring via our Cebu operations center.
 
-We also provide AI-driven customer analytics for retail clients. These projects often involve analyzing point-of-sale data, online behavior, and customer feedback to predict purchasing patterns. Our AI models help retailers optimize product placement, promotional campaigns, and inventory management.
+    Cybersecurity Services
 
-[Ethical Standards]
-NexusTech adheres to five key principles of ethical responsibility:
-1. Respect for human dignity and rights.
-2. Transparency in AI decision-making.
-3. Fairness in avoiding discriminatory bias.
-4. Accountability through audits and reviews.
-5. Sustainability by minimizing environmental impacts of large-scale computing.
+    NexusTech’s security offerings are certified to international standards (ISO 27001, PCI-DSS), and include:
 
-One of the biggest challenges for IT companies is balancing business growth with environmental sustainability. NexusTech has acknowledged that while it operates data-intensive workloads, it also invests in carbon offset programs, energy-efficient infrastructure, and green partnerships. However, we recognize that giving back to the community cannot justify harmful practices, and so we constantly evaluate our environmental footprint.
+        - Security Operations Center (SOC) in Cebu providing real-time monitoring.
+        - Compliance consulting for financial services, healthcare, and e-commerce.
+        - Incident response teams capable of handling ransomware and data breach scenarios.
+        - Red team/blue team exercises for enterprise clients.
+
+    AI and Analytics Services
+
+    We now support a wide spectrum of industries, with offerings such as:
+
+        - Multilingual AI chatbots for customer service (English, Filipino, Cebuano, Bahasa).
+        - Predictive analytics for manufacturing and logistics to minimize downtime.
+        - Data lake architecture and governance to unify enterprise data.
+        - Responsible AI consulting for organizations adopting AI in regulated sectors.
+
+[Community and Talent Development]
+
+    NexusTech recognizes Cebu’s potential as a technology hub. To contribute to the local ecosystem, the company has:
+
+        - University partnerships with Cebu Institute of Technology and University of San Carlos to develop AI and cloud engineering curriculums.
+        - Scholarship and internship programs for IT and computer engineering students in Cebu.
+        - Tech talks and hackathons hosted in Cebu City to promote innovation among SMEs and startups.
+        - SME enablement workshops providing affordable training for local businesses on digital tools.
+
+[Ethical Standards & Sustainability]
+
+    NexusTech adheres to five key principles of ethical responsibility:
+
+        1. Respect for human dignity and rights.
+        2. Transparency in AI decision-making.
+        3. Fairness in avoiding discriminatory bias.
+        4. Accountability through audits and reviews.
+        5. Sustainability by minimizing environmental impacts of large-scale computing.
+
+Our Cebu operations are powered by renewable energy partnerships and energy-efficient cooling systems. In addition, NexusTech has launched a tree-planting initiative in partnership with Visayas-based NGOs to offset carbon emissions.
 
 [Client Stories]
-A healthcare provider in Singapore partnered with NexusTech in 2022 to modernize its patient record system. The project involved migrating over 20 years of patient records to a secure cloud environment. By leveraging InsightAI, the hospital reduced patient wait times by 18% and improved resource allocation during peak periods.
 
-A retail chain in Manila used our analytics services to track customer purchase behavior across 200 stores. By analyzing transaction data and combining it with customer feedback surveys, the company increased same-store sales by 12% within six months.
-
-A financial institution in Jakarta engaged NexusTech for penetration testing and cybersecurity upgrades. The outcome was a 70% reduction in phishing-related incidents and full compliance with international banking security standards.
+    - Healthcare Provider (Singapore): Migrated 20 years of patient records securely to the cloud, reducing wait times by 18%.
+    - Retail Chain (Manila): Increased same-store sales by 12% after using AI-driven purchase behavior insights.
+    - Financial Institution (Jakarta): Achieved full banking compliance and reduced phishing-related incidents by 70%.
+    - SME Partnership (Cebu): Helped a Cebu-based logistics company adopt a hybrid cloud system, resulting in a 25% cut in operational costs and improved tracking of shipments across Visayas.
 
 [Contact Information]
-For sales inquiries: sales@nexustech.com
-For technical support: support@nexustech.com
-Phone: +65 1234 5678 (Singapore HQ)
-Office addresses:
-- Singapore HQ: 15 Marina Boulevard, Singapore
-- Manila Office: 120 Ayala Avenue, Makati City
-- Jakarta Office: 88 Sudirman Road, Jakarta
+
+    For sales inquiries: sales@nexustech.com
+    For technical support: support@nexustech.com
+    Phone: +65 1234 5678 (Singapore HQ)
+    Office addresses:
+        - Singapore HQ: 15 Marina Boulevard, Singapore
+        - Manila Office: 120 Ayala Avenue, Makati City
+        - Jakarta Office: 88 Sudirman Road, Jakarta
+        - Cebu Office (R&D & Operations Center): Cebu Business Park, Cebu City
 
 [Closing Note]
-NexusTech is committed to continuous innovation, but also to maintaining trust with clients, partners, and communities. Technology is not neutral; it carries consequences. Our goal is to ensure those consequences are positive, sustainable, and fair. Whether you are a small business moving your first application to the cloud or a global enterprise analyzing terabytes of sensitive data, NexusTech stands ready to provide solutions that are secure, scalable, and ethically responsible.
+
+    NexusTech is committed to continuous innovation while maintaining trust with clients, partners, and communities. Our expansion into Cebu demonstrates our belief that world-class technology can emerge from local ecosystems. Whether serving SMEs or large enterprises, our solutions are secure, scalable, multilingual, and ethically responsible.

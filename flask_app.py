@@ -5,8 +5,9 @@ from typing import Dict, List, Any
 import logging
 from datetime import datetime
 
-# Import your RAG chatbot
-from rag_app import RAGChatbot
+# Import your multilingual RAG chatbot and conversation memory
+from rag_app import MultilingualRAGChatbot
+from conversation_memory import ConversationMemoryManager
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -16,35 +17,50 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)  # Enable CORS for cross-origin requests
 
-# Global chatbot instance (singleton pattern)
+# Global instances (singleton pattern)
 chatbot_instance = None
+memory_manager = None
+
 
 def get_chatbot():
-    """Get or create the RAG chatbot instance"""
+    """Get or create the multilingual RAG chatbot instance"""
     global chatbot_instance
     if chatbot_instance is None:
-        logger.info("Initializing RAG Chatbot...")
-        chatbot_instance = RAGChatbot()
+        logger.info("Initializing Multilingual RAG Chatbot...")
+        chatbot_instance = MultilingualRAGChatbot()
         if not chatbot_instance.is_initialized:
-            logger.error("Failed to initialize RAG Chatbot")
-            raise RuntimeError("RAG Chatbot initialization failed")
-        logger.info(f"RAG Chatbot initialized with {len(chatbot_instance.vector_db.chunks)} chunks")
+            logger.error("Failed to initialize Multilingual RAG Chatbot")
+            raise RuntimeError("Multilingual RAG Chatbot initialization failed")
+        logger.info(f"Multilingual RAG Chatbot initialized with {len(chatbot_instance.vector_db.chunks)} chunks")
+        logger.info(f"Supported languages: {list(chatbot_instance.multilingual_handler.supported_languages.keys())}")
     return chatbot_instance
 
-# In-memory conversation storage (for development)
-# In production, you might want to use Redis or a database
-conversation_memories = {}
+
+def get_memory_manager():
+    """Get or create the conversation memory manager"""
+    global memory_manager
+    if memory_manager is None:
+        logger.info("Initializing Conversation Memory Manager...")
+        memory_manager = ConversationMemoryManager()
+        logger.info("Conversation Memory Manager initialized")
+    return memory_manager
+
 
 @app.route('/', methods=['GET'])
 def health_check():
-    """Health check endpoint"""
+    """Enhanced health check endpoint with memory status"""
     try:
         chatbot = get_chatbot()
+        memory = get_memory_manager()
+        memory_status = memory.health_check()
+
         return jsonify({
             "status": "healthy",
-            "message": "RAG Chatbot API is running",
+            "message": "Multilingual RAG Chatbot API is running",
             "chunks_count": len(chatbot.vector_db.chunks),
             "initialized": chatbot.is_initialized,
+            "supported_languages": list(chatbot.multilingual_handler.supported_languages.keys()),
+            "memory_status": memory_status,
             "timestamp": datetime.now().isoformat()
         }), 200
     except Exception as e:
@@ -55,9 +71,10 @@ def health_check():
             "timestamp": datetime.now().isoformat()
         }), 500
 
+
 @app.route('/chat', methods=['POST'])
 def chat():
-    """Main chat endpoint for webhook integration"""
+    """Enhanced chat endpoint with persistent conversation memory"""
     try:
         # Get request data
         data = request.get_json()
@@ -66,50 +83,68 @@ def chat():
             return jsonify({"error": "No JSON data provided"}), 400
 
         message = data.get('message', '').strip()
-        history = data.get('history', [])
-        user_id = data.get('user_id', 'default')  # Optional user ID for conversation tracking
+        user_id = data.get('user_id', 'default')
+
+        # For Facebook Messenger integration
+        facebook_sender_id = data.get('sender', {}).get('id')
+        if facebook_sender_id:
+            user_id = f"fb_{facebook_sender_id}"
 
         if not message:
             return jsonify({"error": "No message provided"}), 400
 
         logger.info(f"Received message from user {user_id}: {message}")
 
-        # Get chatbot instance
+        # Get instances
         chatbot = get_chatbot()
+        memory = get_memory_manager()
 
-        # Generate response
-        result = chatbot.generate_response(message)
+        # Get conversation context for continuity
+        conversation_context = memory.get_conversation_context(user_id)
+        conversation_summary = memory.get_conversation_summary(user_id)
 
-        # Update conversation history
-        updated_history = history.copy()
-        updated_history.append({
-            "role": "user",
-            "content": message,
-            "timestamp": datetime.now().isoformat()
-        })
-        updated_history.append({
-            "role": "assistant",
-            "content": result["response"],
-            "timestamp": datetime.now().isoformat(),
-            "confidence": result["confidence"],
-            "sources_count": len(result["sources"])
-        })
+        # Generate response with context if available
+        if hasattr(chatbot, 'generate_response_with_context') and conversation_context:
+            result = chatbot.generate_response_with_context(
+                message, conversation_context, conversation_summary
+            )
+        else:
+            result = chatbot.generate_response(message)
 
-        # Keep only last 20 messages to prevent memory issues
-        if len(updated_history) > 20:
-            updated_history = updated_history[-20:]
+        # Store user message in memory
+        memory.add_message(
+            user_id=user_id,
+            role="user",
+            content=message,
+            language=result["language"],
+            metadata={"source": "api", "endpoint": "chat"}
+        )
 
-        # Store conversation in memory (optional)
-        conversation_memories[user_id] = updated_history
+        # Store assistant response in memory
+        memory.add_message(
+            user_id=user_id,
+            role="assistant",
+            content=result["response"],
+            language=result["language"],
+            metadata={
+                "confidence": result["confidence"],
+                "sources_count": len(result["sources"])
+            }
+        )
 
-        logger.info(f"Generated response for user {user_id} with confidence {result['confidence']:.2f}")
+        # Get updated history for response
+        updated_history = memory.get_conversation_history(user_id)
 
-        # Return response in format expected by webhook
+        logger.info(f"Generated contextual {result['language']} response for user {user_id}")
+
         return jsonify({
             "response": result["response"],
+            "language": result["language"],
+            "language_name": chatbot.multilingual_handler.supported_languages[result["language"]],
             "history": updated_history,
             "confidence": result["confidence"],
             "sources_count": len(result["sources"]),
+            "has_context": bool(conversation_context),
             "timestamp": datetime.now().isoformat()
         }), 200
 
@@ -123,7 +158,7 @@ def chat():
 
 @app.route('/chat/simple', methods=['POST'])
 def chat_simple():
-    """Simplified chat endpoint that only returns the response text"""
+    """Simplified chat endpoint with basic multilingual info"""
     try:
         data = request.get_json()
 
@@ -141,9 +176,11 @@ def chat_simple():
         chatbot = get_chatbot()
         result = chatbot.generate_response(message)
 
-        # Return just the response text
+        # Return response with language info
         return jsonify({
-            "response": result["response"]
+            "response": result["response"],
+            "language": result["language"],  # ADDED: Language detection
+            "confidence": result["confidence"]  # ADDED: Confidence score
         }), 200
 
     except Exception as e:
@@ -155,7 +192,7 @@ def chat_simple():
 
 @app.route('/chat/detailed', methods=['POST'])
 def chat_detailed():
-    """Detailed chat endpoint with full RAG information"""
+    """Detailed chat endpoint with full multilingual RAG information"""
     try:
         data = request.get_json()
 
@@ -174,9 +211,11 @@ def chat_detailed():
         chatbot = get_chatbot()
         result = chatbot.generate_response(message)
 
-        # Return detailed information
+        # Return detailed multilingual information
         return jsonify({
             "response": result["response"],
+            "language": result["language"],
+            "language_name": chatbot.multilingual_handler.supported_languages[result["language"]],
             "confidence": result["confidence"],
             "sources": result["sources"],
             "user_id": user_id,
@@ -184,7 +223,8 @@ def chat_detailed():
             "model_info": {
                 "llm_model": chatbot.llm_model,
                 "embedding_model": chatbot.embedding_model,
-                "chunks_total": len(chatbot.vector_db.chunks)
+                "chunks_total": len(chatbot.vector_db.chunks),
+                "supported_languages": list(chatbot.multilingual_handler.supported_languages.keys())
             }
         }), 200
 
@@ -195,15 +235,38 @@ def chat_detailed():
             "message": str(e)
         }), 500
 
+@app.route('/languages', methods=['GET'])
+def get_supported_languages():
+    """Get list of supported languages"""
+    try:
+        chatbot = get_chatbot()
+        return jsonify({
+            "supported_languages": chatbot.multilingual_handler.supported_languages,
+            "default_language": "en",
+            "timestamp": datetime.now().isoformat()
+        }), 200
+
+    except Exception as e:
+        logger.error(f"Error getting supported languages: {e}")
+        return jsonify({
+            "error": "Internal server error",
+            "message": str(e)
+        }), 500
+
+
 @app.route('/conversation/<user_id>', methods=['GET'])
 def get_conversation(user_id):
-    """Get conversation history for a specific user"""
+    """Get conversation history for a specific user using persistent memory"""
     try:
-        history = conversation_memories.get(user_id, [])
+        memory = get_memory_manager()
+        history = memory.get_conversation_history(user_id)
+        context = memory.get_conversation_context(user_id)
+
         return jsonify({
             "user_id": user_id,
             "history": history,
             "message_count": len(history),
+            "has_context": bool(context),
             "timestamp": datetime.now().isoformat()
         }), 200
 
@@ -214,12 +277,15 @@ def get_conversation(user_id):
             "message": str(e)
         }), 500
 
+
 @app.route('/conversation/<user_id>', methods=['DELETE'])
 def clear_conversation(user_id):
-    """Clear conversation history for a specific user"""
+    """Clear conversation history for a specific user using persistent memory"""
     try:
-        if user_id in conversation_memories:
-            del conversation_memories[user_id]
+        memory = get_memory_manager()
+        cleared = memory.clear_conversation(user_id)
+
+        if cleared:
             message = f"Conversation cleared for user {user_id}"
         else:
             message = f"No conversation found for user {user_id}"
@@ -227,6 +293,7 @@ def clear_conversation(user_id):
         return jsonify({
             "message": message,
             "user_id": user_id,
+            "cleared": cleared,
             "timestamp": datetime.now().isoformat()
         }), 200
 
@@ -239,14 +306,16 @@ def clear_conversation(user_id):
 
 @app.route('/stats', methods=['GET'])
 def get_stats():
-    """Get chatbot statistics"""
+    """Get multilingual chatbot statistics"""
     try:
         chatbot = get_chatbot()
+        memory = get_memory_manager()
 
         return jsonify({
             "status": "active",
             "chunks_count": len(chatbot.vector_db.chunks),
-            "active_conversations": len(conversation_memories),
+            "active_conversations": memory.get_active_users_count(),
+            "supported_languages": list(chatbot.multilingual_handler.supported_languages.keys()),
             "model_info": {
                 "llm_model": chatbot.llm_model,
                 "embedding_model": chatbot.embedding_model,
@@ -285,20 +354,25 @@ def internal_error(error):
         "timestamp": datetime.now().isoformat()
     }), 500
 
+
 if __name__ == '__main__':
-    # Get configuration from environment variables
+    # Detect if running on Render or locally
+    is_production = os.getenv('RENDER') is not None
+    debug = not is_production
+
     host = os.getenv('FLASK_HOST', '0.0.0.0')
     port = int(os.getenv('PORT', 5000))
-    debug = False  # Set to False for production deployment
 
-    logger.info(f"Starting Flask server on {host}:{port} (debug={debug})")
+    logger.info(f"Environment: {'Production (Render)' if is_production else 'Development'}")
+    logger.info(f"Starting Multilingual Flask server on {host}:{port} (debug={debug})")
 
-    # Initialize chatbot on startup
+    # Initialize components on startup
     try:
         get_chatbot()
-        logger.info("RAG Chatbot pre-loaded successfully")
+        get_memory_manager()
+        logger.info("All components pre-loaded successfully")
     except Exception as e:
-        logger.error(f"Failed to pre-load RAG Chatbot: {e}")
+        logger.error(f"Failed to initialize components: {e}")
         exit(1)
 
     # Run the Flask app
