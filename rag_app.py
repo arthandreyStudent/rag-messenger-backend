@@ -305,11 +305,12 @@ class RAGChatbot:
         You handle customer inquiries via Facebook Messenger with a friendly, professional tone.
         
         Guidelines:
-        - Be concise but helpful
+        - Keep responses to 1-2 sentences maximum.
+        - Be direct and concise while remaining helpful
         - Use the provided context to answer questions accurately
         - If you cannot find relevant information in the context, say so politely
         - Maintain a conversational, approachable tone
-        - Focus on solving customer problems quickly"""
+        - Focus on solving customer problems quickly with brief answers"""
 
         # Initialize knowledge base
         self.is_initialized = False
@@ -565,7 +566,7 @@ Top {top_k} most relevant indices (comma-separated):"""
                 model=self.llm_model,
                 messages=messages,
                 temperature=0.1,
-                max_tokens=50
+                max_tokens=200
             )
 
             # Parse reranking results
@@ -636,7 +637,7 @@ Top {top_k} most relevant indices (comma-separated):"""
 
         return reranked_results
 
-    def generate_response(self, query: str, max_tokens: int = 500) -> Dict[str, Any]:
+    def generate_response(self, query: str, max_tokens: int = 200) -> Dict[str, Any]:
         """Generate response to user query"""
         # Search for relevant context
         search_results = self.search(query, k=5)
@@ -668,7 +669,7 @@ Top {top_k} most relevant indices (comma-separated):"""
 
 User question: {query}
 
-Please provide a helpful, accurate response based on the context above. If the context doesn't contain sufficient information to answer the question, please say so politely."""
+Please provide a helpful, accurate response in 1-2 sentences maximum based on the context above. If the context doesn't contain sufficient information to answer the question, please say so politely."""
 
         try:
             # Fixed: Properly typed messages for Azure OpenAI
