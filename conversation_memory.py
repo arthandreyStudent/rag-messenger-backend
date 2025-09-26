@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 class ConversationMemoryManager:
     def __init__(self):
+        self.memory_fallback = {} # Always initialize fallback memory
         """Initialize Redis-based conversation memory manager"""
         try:
             # Connect to Redis (Render provides REDIS_URL automatically)
@@ -24,7 +25,6 @@ class ConversationMemoryManager:
             logger.warning(f"⚠️  Redis connection failed: {e}")
             logger.info("🔄 Falling back to in-memory storage for development")
             self.redis_client = None
-            self.memory_fallback = {}
 
         # Memory settings
         self.max_history_length = 20  # Keep last 20 exchanges
