@@ -289,7 +289,7 @@ if __name__ == '__main__':
     # Get configuration from environment variables
     host = os.getenv('FLASK_HOST', '0.0.0.0')
     port = int(os.getenv('FLASK_PORT', 5000))
-    debug = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    debug = False  # Set to False for production deployment
 
     logger.info(f"Starting Flask server on {host}:{port} (debug={debug})")
 

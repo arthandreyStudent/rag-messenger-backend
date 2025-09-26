@@ -148,9 +148,6 @@ class ChromaVectorDB:
             persist_directory=self.persist_directory
         )
 
-        # Persist the database
-        self.vectorstore.persist()
-
     def search(self, query: str, k: int = 10) -> List[Tuple[ContextualChunk, float]]:
         """Search for similar vectors using semantic similarity"""
         if not self.vectorstore or not self.chunks:

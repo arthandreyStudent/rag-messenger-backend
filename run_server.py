@@ -14,7 +14,7 @@ def main():
     # Configuration
     host = os.getenv('FLASK_HOST', '0.0.0.0')
     port = int(os.getenv('FLASK_PORT', 5000))
-    debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'  # Default to True for development
+    debug = False  # Set to False for production deployment
 
     print(f"📡 Server configuration:")
     print(f"   Host: {host}")
