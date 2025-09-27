@@ -24,7 +24,6 @@ flask-cors>=5.0.0
 langdetect>=1.0.9
 deep-translator>=1.11.4
 spacy>=3.7.0
-en_core_web_sm>=3.7.0
 
 # Redis for production conversation memory - Python 3.13 compatible
 redis>=5.1.1
