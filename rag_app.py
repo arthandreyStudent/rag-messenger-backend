@@ -19,32 +19,19 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader, DirectoryLoader
 from langchain.schema import Document as LangChainDocument
 from langchain.chains import ConversationalRetrievalChain
-from langchain.memory import ConversationBufferMemory
 
 # Traditional search dependencies
 from rank_bm25 import BM25Okapi
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
 
 # Multilingual dependencies
 from langdetect import detect, DetectorFactory
 from deep_translator import GoogleTranslator
 import spacy
-from collections import Counter
-
-# Download required NLTK data
-try:
-    nltk.download('punkt', quiet=True)
-    nltk.download('stopwords', quiet=True)
-except:
-    pass
 
 # Set seed for consistent language detection
 DetectorFactory.seed = 0
 
 load_dotenv()
-
 
 @dataclass
 class Document:

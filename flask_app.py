@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-from typing import Dict, List, Any
 import logging
 from datetime import datetime
 

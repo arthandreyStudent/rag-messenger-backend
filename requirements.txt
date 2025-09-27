@@ -12,40 +12,20 @@ langchain-chroma>=0.1.0
 
 # Vector database - Python 3.13 compatible
 chromadb>=0.5.15
-pydantic>=2.8.0
 
 # Text processing and search
-nltk>=3.9.1
 rank-bm25>=0.2.2
-sentence-transformers>=3.0.0
 
 # Web framework
 flask>=3.0.3
 flask-cors>=5.0.0
 
-# HTTP and async support
-requests>=2.32.0
-httpx>=0.27.0
-aiohttp>=3.10.0
-
-# Data handling and utilities
-typing-extensions>=4.12.0
-SQLAlchemy>=2.0.0
-tenacity>=9.0.0
-
 # Multilingual support - FIXED VERSIONS
 langdetect>=1.0.9
 deep-translator>=1.11.4
 spacy>=3.7.0
+en_core_web_sm>=3.7.0
 
 # Redis for production conversation memory - Python 3.13 compatible
 redis>=5.1.1
 hiredis>=2.4.1
-
-# Production WSGI servers
-gunicorn>=21.2.0
-waitress>=2.1.2
-
-# Additional utilities
-colorama>=0.4.6
-tqdm>=4.66.0

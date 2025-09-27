@@ -14,7 +14,7 @@ def main():
     # Configuration
     host = os.getenv('FLASK_HOST', '0.0.0.0')
     port = int(os.getenv('PORT', 5000))
-    debug = False  # Set to False for production deployment
+    debug = True  # Set to False for production deployment
 
     print(f"📡 Server configuration:")
     print(f"   Host: {host}")
@@ -29,7 +29,7 @@ def main():
         print(f"🌍 Supported languages: {list(chatbot.multilingual_handler.supported_languages.values())}")
 
         print(f"\n🌐 API Endpoints available:")
-        print(f"   Health Check:     http://{host}:{port}/")
+        print(f"   Health Check:     http://{host}:{port}/health")
         print(f"   Chat (Main):      http://{host}:{port}/chat")
         print(f"   Chat Simple:      http://{host}:{port}/chat/simple")
         print(f"   Chat Detailed:    http://{host}:{port}/chat/detailed")
