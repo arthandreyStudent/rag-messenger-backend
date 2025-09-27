@@ -386,7 +386,7 @@ class ChromaVectorDB:
             azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
             api_key=os.getenv("AZURE_OPENAI_API_KEY"),
             openai_api_version="2024-12-01-preview",
-            chunk_size=1
+            chunk_size=32
         )
 
         self.vectorstore = None
@@ -588,7 +588,7 @@ class MultilingualRAGChatbot:
             azure_endpoint=self.azure_endpoint,
             api_key=self.azure_api_key,
             openai_api_version=self.api_version,
-            chunk_size=1
+            chunk_size=32
         )
 
         self.llm = AzureChatOpenAI(
@@ -916,11 +916,12 @@ Top {top_k} most relevant indices (comma-separated):"""
             print(f"Error in multilingual reranking: {e}")
             return sorted(results[:top_k], key=lambda x: x.final_score, reverse=True)
 
-    def generate_response(self, query: str, max_tokens: int = 200) -> Dict[str, Any]:
+    def generate_response(self, query: str, max_tokens: int = 200, user_language: str = None) -> Dict[str, Any]:
         """Generate multilingual response to user query"""
 
-        # Detect query language
-        user_language = self.multilingual_handler.detect_language(query)
+        # Use provided user_language or detect from query
+        if not user_language:
+            user_language = self.multilingual_handler.detect_language(query)
         print(f"🌍 Detected language: {user_language}")
 
         # Search for relevant context
@@ -963,7 +964,9 @@ Top {top_k} most relevant indices (comma-separated):"""
 
     User question: {query}
 
-    Please provide a helpful, accurate response in 1-2 sentences maximum based on the context above. If the context doesn't contain sufficient information to answer the question, please say so politely."""
+    Please provide a helpful, accurate response in 1-2 sentences maximum based on the context above.
+     Do NOT repeat or summarize the context. Only answer the user's question directly.
+     If the context doesn't contain sufficient information to answer the question, please say so politely."""
 
         elif user_language == 'tl':
             response_prompt = f"""Answer the user's question in Filipino/Tagalog using the provided context.
@@ -974,7 +977,9 @@ Top {top_k} most relevant indices (comma-separated):"""
     User question (translated to English): {english_query}
     Original question (in Filipino): {query}
 
-    Magbigay ng matulungin at tumpak na sagot na 1-2 pangungusap lamang base sa konteksto sa itaas. Kung walang sapat na impormasyon sa konteksto, sabihin ito nang magalang sa wikang Filipino/Tagalog."""
+    Magbigay ng matulungin at tumpak na sagot na 1-2 pangungusap lamang base sa konteksto sa itaas.
+     Huwag ulitin o ibuod ang konteksto. Sagutin lamang ang tanong ng user nang direkta.
+     Kung walang sapat na impormasyon sa konteksto, sabihin ito nang magalang sa wikang Filipino/Tagalog."""
 
         elif user_language == 'ceb':
             response_prompt = f"""Answer the user's question in Cebuano/Binisaya using the provided context.
@@ -985,7 +990,9 @@ Top {top_k} most relevant indices (comma-separated):"""
     User question (translated to English): {english_query}
     Original question (in Cebuano): {query}
 
-    Hatagi ug matinabangon ug tukma nga tubag nga 1-2 ka linya lang base sa konteksto sa ibabaw. Kung walay igo nga kasayuran sa konteksto, sultihi kini nga matinahuron sa pinulongang Cebuano/Binisaya."""
+    Hatagi ug matinabangon ug tukma nga tubag nga 1-2 ka linya lang base sa konteksto sa ibabaw.
+     Ayaw isulti o i-summarize ang konteksto sa imohang tubag. Tubaga lang og diretso ang pangutana sa user.
+     Kung walay igo nga kasayuran sa konteksto, sultihi kini nga matinahuron sa pinulongang Cebuano/Binisaya."""
 
         else:
             # Fallback for any other language
@@ -994,7 +1001,9 @@ Top {top_k} most relevant indices (comma-separated):"""
 
     User question: {query}
 
-    Please provide a helpful, accurate response in 1-2 sentences maximum based on the context above. If the context doesn't contain sufficient information to answer the question, please say so politely."""
+    Please provide a helpful, accurate response in 1-2 sentences maximum based on the context above.
+     Do NOT repeat or summarize the context. Only answer the user's question directly.
+     If the context doesn't contain sufficient information to answer the question, please say so politely."""
 
         try:
             from openai.types.chat import (
@@ -1039,6 +1048,24 @@ Top {top_k} most relevant indices (comma-separated):"""
                 "sources": [],
                 "language": user_language
             }
+
+    def generate_response_with_context(self, query: str, conversation_context: str = "", conversation_summary: str = None, max_tokens: int = 200) -> Dict[str, Any]:
+        """
+        Generate a response using both the current query and previous conversation context.
+        """
+        # Detect language from the latest user query only
+        user_language = self.multilingual_handler.detect_language(query)
+
+        # Combine context and summary with the query
+        full_context = ""
+        if conversation_summary:
+            full_context += f"Conversation Summary: {conversation_summary}\n"
+        if conversation_context:
+            full_context += f"Recent history:\n{conversation_context}\n"
+        full_context += f"User question: {query}"
+
+        # Pass user_language to generate_response
+        return self.generate_response(full_context, max_tokens=max_tokens, user_language=user_language)
 
     def initialize_knowledge_base(self):
         """Smart initialization - load existing or build new"""

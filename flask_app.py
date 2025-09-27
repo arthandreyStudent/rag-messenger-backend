@@ -98,8 +98,13 @@ def chat():
         chatbot = get_chatbot()
         memory = get_memory_manager()
 
-        # Get conversation context for continuity
-        conversation_context = memory.get_conversation_context(user_id)
+        # Detect user language from the incoming message
+        user_language = chatbot.multilingual_handler.detect_language(message)
+
+        # Build multilingual context for continuity
+        conversation_context = memory.build_multilingual_context(
+            user_id, user_language, chatbot.multilingual_handler
+        )
         conversation_summary = memory.get_conversation_summary(user_id)
 
         # Generate response with context if available

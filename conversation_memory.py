@@ -108,6 +108,26 @@ class ConversationMemoryManager:
 
         return "\n".join(context_parts)
 
+    def build_multilingual_context(self, user_id: str, target_language: str, multilingual_handler) -> str:
+        """Build conversation context in the user's current language"""
+        history = self.get_conversation_history(user_id)
+        if not history:
+            return ""
+
+        context_lines = []
+        for msg in history[-10:]:
+            content = msg["content"]
+            lang = msg["language"]
+            # Translate if needed
+            if lang != target_language:
+                if lang == "en":
+                    content = multilingual_handler.translate_from_english(content, target_language)
+                else:
+                    english_content = multilingual_handler.translate_to_english(content, lang)
+                    content = multilingual_handler.translate_from_english(english_content, target_language)
+            context_lines.append(f"{msg['role'].capitalize()} ({lang}): {content}")
+        return "\n".join(context_lines)
+
     def update_conversation_summary(self, user_id: str, summary: str) -> None:
         """Store conversation summary for long-term context"""
         context_data = {
