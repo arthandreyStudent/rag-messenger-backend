@@ -28,3 +28,5 @@ spacy>=3.7.0
 # Redis for production conversation memory - Python 3.13 compatible
 redis>=5.1.1
 hiredis>=2.4.1
+
+# This is just for commiting to git
