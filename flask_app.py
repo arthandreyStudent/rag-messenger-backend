@@ -46,7 +46,7 @@ def get_memory_manager():
     return memory_manager
 
 
-@app.route('/', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def health_check():
     """Enhanced health check endpoint with memory status"""
     try:
